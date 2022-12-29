@@ -1,6 +1,7 @@
 #include "ECMeter.h"
 #include "Thermistor.h"
 #include "HC04Distance.h"
+#include "Communication.h"
 
 ECMeter *  ecmeter=ECMeter::GetInstance(A0,A1,A2);
 HC04Distance * hc04first;
