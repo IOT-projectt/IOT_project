@@ -15,7 +15,8 @@ void Length::calculateLength() {
   digitalWrite(this->trigPin, LOW);
   this->time = pulseIn(this->echoPin, HIGH);
   this->distance = this->time / 29.1 / 2;
-  if (this->distance > 200) {
-    this->distance = 200;
+  if (this->distance > 40) {
+    this->distance = 40;
   }
+  this->distance = 36 - this->distance;
 }

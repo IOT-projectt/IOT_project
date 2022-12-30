@@ -1,3 +1,4 @@
+#include "RTClib.h"
 #include "Communication.h"
 #include "ECMeter.h"
 #include "Role.h"
@@ -20,6 +21,8 @@ Length* lengthFirst;
 Length* lengthSecond;
 Role* heater;
 Role* lamp;
+RTC_DS1307 rtc;
+String warning = "";
 
 void setup() {
   communication = Communication::GetInstance(9600);
@@ -28,12 +31,15 @@ void setup() {
   lengthSecond = new Length(LENGTH_SECOND_PIN1, LENGTH_SECOND_PIN2);
   heater = new Role(HEATER_PIN);
   lamp = new Role(LAMP_PIN);
+  rtc.begin();
+  rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
 
-  heater->statement=false;
-  lamp->statement=false;
+  heater->statement = false;
+  lamp->statement = false;
 }
 
 void loop() {
+  DateTime now = rtc.now();
   ecMeter->CalculateEC();
   lengthFirst->calculateLength();
   lengthSecond->calculateLength();
@@ -43,7 +49,10 @@ void loop() {
   else if (ecMeter->celsius >= 45)
     heater->Kapat();
 
-  // Saat modülü ve ışık
+  if (now.hour() > 9 && now.hour() < 22)
+    lamp->Ac();
+  else
+    lamp->Kapat();
 
   communication->AddMessage(String(ecMeter->calEC));
   communication->AddMessage(String(ecMeter->calppm));
@@ -52,7 +61,7 @@ void loop() {
   communication->AddMessage(String(lamp->statement));
   communication->AddMessage(String(heater->statement));
 
-  if (Serial.available() > 0){
+  if (Serial.available() > 0) {
     Serial.read();
     communication->SendMessage();
   }

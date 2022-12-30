@@ -6,11 +6,11 @@
 class Role {
 
 private:
-  int pin;
+  uint8_t pin;
 
 public:
-  bool statement;
-  Role(int pin);
+  String statement;
+  Role(uint8_t pin);
   void Ac();
   void Kapat();
 };
