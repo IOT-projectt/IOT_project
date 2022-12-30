@@ -12,7 +12,7 @@ private:
 
 public:
   float distance;
-  
+
   Length(int echo, int trig);
   void calculateLength();
 };

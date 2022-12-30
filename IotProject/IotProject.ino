@@ -57,7 +57,7 @@ void loop() {
   communication->AddMessage(String(ecMeter->calEC));
   communication->AddMessage(String(ecMeter->calppm));
   communication->AddMessage(String(ecMeter->celsius));
-  communication->AddMessage(String(lengthFirst->distance));
+  communication->AddMessage(String((lengthFirst->distance + lengthSecond->distance) / 2));
   communication->AddMessage(String(lamp->statement));
   communication->AddMessage(String(heater->statement));
 
