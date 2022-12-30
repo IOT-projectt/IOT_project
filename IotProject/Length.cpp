@@ -1,13 +1,13 @@
-#include "HC04Distance.h"
+#include "Length.h"
 
-HC04Distance::HC04Distance(int echo, int trig) {
+Length::Length(int echo, int trig) {
   this->echoPin = echo;
   this->trigPin = trig;
   pinMode(this->echoPin, INPUT);
   pinMode(this->trigPin, OUTPUT);
 }
 
-float HC04Distance::Distance() {
+void Length::calculateLength() {
   digitalWrite(this->trigPin, LOW);
   delayMicroseconds(5);
   digitalWrite(this->trigPin, HIGH);
@@ -18,5 +18,4 @@ float HC04Distance::Distance() {
   if (this->distance > 200) {
     this->distance = 200;
   }
-  return this->distance;
 }

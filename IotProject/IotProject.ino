@@ -1,29 +1,61 @@
-#include "ECMeter.h"
-#include "Thermistor.h"
-#include "HC04Distance.h"
 #include "Communication.h"
+#include "ECMeter.h"
+#include "Role.h"
+#include "Thermistor.h"
+#include "Length.h"
 
-ECMeter *  ecmeter=ECMeter::GetInstance(A0,A1,A2);
-HC04Distance * hc04first;
+#define EC_PIN1 A0
+#define EC_PIN2 A1
+#define EC_PIN3 A2
+#define LENGTH_FIRST_PIN1 2
+#define LENGTH_FIRST_PIN2 3
+#define LENGTH_SECOND_PIN1 4
+#define LENGTH_SECOND_PIN2 5
+#define HEATER_PIN 6
+#define LAMP_PIN 7
+
+Communication* communication;
+ECMeter* ecMeter;
+Length* lengthFirst;
+Length* lengthSecond;
+Role* heater;
+Role* lamp;
 
 void setup() {
-  // put your setup code here, to run once:
-  ecmeter->CalEC();
-  Serial.begin(9600);
-hc04first=new HC04Distance(2,3);
+  communication = Communication::GetInstance(9600);
+  ecMeter = ECMeter::GetInstance(EC_PIN1, EC_PIN2, EC_PIN3);
+  lengthFirst = new Length(LENGTH_FIRST_PIN1, LENGTH_FIRST_PIN2);
+  lengthSecond = new Length(LENGTH_SECOND_PIN1, LENGTH_SECOND_PIN2);
+  heater = new Role(HEATER_PIN);
+  lamp = new Role(LAMP_PIN);
+
+  heater->statement=false;
+  lamp->statement=false;
 }
 
 void loop() {
-  Serial.print("ec ");
-  Serial.print(ecmeter->calEC);
-    Serial.print("C ");
-  Serial.print(ecmeter->celsius);
-  Serial.print("ppm ");
-  Serial.println(ecmeter->calppm);
+  ecMeter->CalculateEC();
+  lengthFirst->calculateLength();
+  lengthSecond->calculateLength();
 
-  ecmeter->CalEC();
-  Serial.print("mesafe ");
-  Serial.println(hc04first->Distance());
-  delay(500);
+  if (ecMeter->celsius < 40)
+    heater->Ac();
+  else if (ecMeter->celsius >= 45)
+    heater->Kapat();
 
+  // Saat modülü ve ışık
+
+  communication->AddMessage(String(ecMeter->calEC));
+  communication->AddMessage(String(ecMeter->calppm));
+  communication->AddMessage(String(ecMeter->celsius));
+  communication->AddMessage(String(lengthFirst->distance));
+  communication->AddMessage(String(lamp->statement));
+  communication->AddMessage(String(heater->statement));
+
+  if (Serial.available() > 0){
+    Serial.read();
+    communication->SendMessage();
+  }
+
+  communication->ResetMessage();
 }

@@ -15,7 +15,6 @@ static Communication* Communication::GetInstance(int baudRate) {
 
 void Communication::SendMessage() {
   Serial.print(this->message);
-  this->message = "";
 }
 
 String Communication::ReceiveMessage() {
@@ -27,6 +26,10 @@ String Communication::ReceiveMessage() {
 
 void Communication::AddMessage(String message) {
   this->message += (message + ",");
+}
+
+void Communication::ResetMessage() {
+  this->message = "";
 }
 
 Communication::Communication(int baudRate) {

@@ -9,6 +9,7 @@ public:
   void SendMessage();
   String ReceiveMessage();
   void AddMessage(String message);
+  void ResetMessage();
 
 private:
   static Communication* instance;

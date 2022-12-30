@@ -7,7 +7,10 @@ Role::Role(int pin) {
 
 void Role::Ac() {
   digitalWrite(this->pin, HIGH);
+  this->statement = true;
 }
+
 void Role::Kapat() {
   digitalWrite(this->pin, LOW);
+  this->statement = false;
 }
