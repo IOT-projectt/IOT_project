@@ -3,19 +3,19 @@
 
 #include "Arduino.h"
 
-class Communication{
+class Communication {
 public:
-	static Communication* GetInstance(int baudRate);
-	void SendMessage();
-	String ReceiveMessage();
-	void AddMessage(String message);
-	
+  static Communication* GetInstance(int baudRate);
+  void SendMessage();
+  String ReceiveMessage();
+  void AddMessage(String message);
+
 private:
-	static Communication* instance;
-	String message;
+  static Communication* instance;
+  String message;
   int baudRate;
 
-	Communication(int baudRate);
+  Communication(int baudRate);
 };
 
 #endif

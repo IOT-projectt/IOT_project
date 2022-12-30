@@ -1,19 +1,13 @@
 #ifndef ROLE_H
 #define ROLE_H
-#include<Arduino.h>
-class Role{
+#include <Arduino.h>
+class Role {
 private:
-int pin;
+  int pin;
 public:
-  Role(int);
+  Role(int pin);
   void Ac();
   void Kapat();
-
-
 };
-
-
-
-
 
 #endif
